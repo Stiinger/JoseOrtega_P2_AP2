@@ -4,21 +4,21 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import edu.ucne.joseortega_p2_ap2.data.local.entity.EntidadEntity
+import edu.ucne.joseortega_p2_ap2.data.local.entity.DepositoEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface Dao {
     @Upsert()
-    suspend fun save(entidades: List<EntidadEntity>)
+    suspend fun save(entidades: List<DepositoEntity>)
     @Query(
         """
-            SELECT *FROM Entidades WHERE entidadId == :id limit 1
+            SELECT *FROM Depositos WHERE depositoId == :id limit 1
         """
     )
-    suspend fun find(id: Int): EntidadEntity?
+    suspend fun find(id: Int): DepositoEntity?
     @Delete
-    suspend fun delete(entidad: EntidadEntity)
-    @Query("SELECT * FROM Entidades")
-    fun getAll(): Flow<List<EntidadEntity>>
+    suspend fun delete(deposito: DepositoEntity)
+    @Query("SELECT * FROM Depositos")
+    fun getAll(): Flow<List<DepositoEntity>>
 }
