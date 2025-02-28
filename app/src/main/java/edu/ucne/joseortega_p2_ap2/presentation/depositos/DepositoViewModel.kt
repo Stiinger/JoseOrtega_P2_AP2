@@ -3,12 +3,15 @@ package edu.ucne.joseortega_p2_ap2.presentation.depositos
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.ucne.joseortega_p2_ap2.data.local.entity.DepositoEntity
 import edu.ucne.joseortega_p2_ap2.data.remote.Resource
 import edu.ucne.joseortega_p2_ap2.data.remote.dto.DepositoDto
 import edu.ucne.joseortega_p2_ap2.data.repository.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -108,25 +111,25 @@ class DepositoViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 fecha = formattedDate,
-                errorMessage = if (fecha.isBlank()) "Debes rellenar el campo Fecha" else null
+                errorMessage = if (fecha.isBlank()) "Debes rellenar el campo Fecha"
+                else null
             )
         }
     }
 
     fun find(depositoId: Int) {
         viewModelScope.launch {
-            if (depositoId > 0) {
-                val depositoDto = repository.find(depositoId)
-                if (depositoDto.idDeposito != 0) {
-                    _uiState.update {
-                        it.copy(
-                            depositoId = depositoDto.idDeposito,
-                            fecha = depositoDto.fecha,
-                            concepto = depositoDto.concepto,
-                            monto = depositoDto.monto.toString(),
-                            idCuenta = depositoDto.idCuenta.toString()
-                        )
-                    }
+            val deposito = repository.find(depositoId)
+
+            if (deposito != null) {
+                _uiState.update {
+                    it.copy(
+                        depositoId = deposito.depositoId,
+                        fecha = deposito.fecha,
+                        concepto = deposito.concepto,
+                        monto = deposito.monto.toString(),
+                        idCuenta = deposito.idCuenta.toString()
+                    )
                 }
             }
         }
