@@ -16,10 +16,6 @@ interface DepositoApi {
     suspend fun getDepositos(): List<DepositoDto>
 
     @Headers("X-API-Key:test")
-    @GET("api/Depositos/{id}")
-    suspend fun getDeposito(@Path("id") id: Int): DepositoDto
-
-    @Headers("X-API-Key:test")
     @POST("api/Depositos")
     suspend fun saveDeposito(@Body depositoDto: DepositoDto?): DepositoDto
 
