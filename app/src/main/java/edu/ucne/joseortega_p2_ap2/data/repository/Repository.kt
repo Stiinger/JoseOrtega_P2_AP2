@@ -44,7 +44,20 @@ class Repository @Inject constructor(
     }
 
     suspend fun update(id: Int, depositoDto: DepositoDto) = remoteDataSource.updateDeposito(id, depositoDto)
-    suspend fun find(id: Int) = remoteDataSource.getDeposito(id)
+    suspend fun find(id: Int): DepositoEntity? {
+        val depositosDto = remoteDataSource.getDepositos()
+        return depositosDto
+            .firstOrNull { it.idDeposito == id }
+            ?.let { depositoDto ->
+                DepositoEntity(
+                    depositoId = depositoDto.idDeposito,
+                    fecha = depositoDto.fecha,
+                    idCuenta = depositoDto.idCuenta,
+                    concepto = depositoDto.concepto,
+                    monto = depositoDto.monto
+                )
+            }
+    }
     suspend fun save(depositoDto: DepositoDto) = remoteDataSource.saveDeposito(depositoDto)
     suspend fun delete(id: Int) = remoteDataSource.deleteDeposito(id)
 }
